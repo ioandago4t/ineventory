@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flavor Stock</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #111214;
+      --panel: #1b1c20;
+      --border: #303137;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --accent: #ff963f;
+      --green: #54d6a0;
+      --red: #ff747d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      padding: 22px max(5%, calc((100% - 1000px) / 2));
+      border-bottom: 1px solid var(--border);
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    header span { color: var(--accent); }
+
+    main {
+      width: min(100% - 40px, 1000px);
+      margin: 42px auto;
+    }
+
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    h2 { margin: 0 0 18px; font-size: 18px; }
+    .muted { margin: 0 0 28px; color: var(--muted); }
+
+    .panel {
+      padding: 22px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel);
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1.2fr 1.4fr 1fr 1fr auto;
+      align-items: end;
+      gap: 12px;
+    }
+
+    label { color: var(--muted); font-size: 13px; }
+
+    input {
+      width: 100%;
+      min-width: 0;
+      margin-top: 7px;
+      padding: 11px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: #121316;
+      color: var(--text);
+      font: inherit;
+    }
+
+    button {
+      padding: 10px 13px;
+      border: 0;
+      border-radius: 7px;
+      background: var(--accent);
+      color: #21170f;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover { filter: brightness(1.08); }
+    button:disabled { cursor: not-allowed; opacity: .45; }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      white-space: nowrap;
+    }
+
+    th, td {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    td { font-size: 14px; }
+    .price { color: var(--accent); }
+    .price-editor { display: flex; align-items: center; gap: 8px; }
+    .price-editor input { width: 110px; margin: 0; padding: 7px; }
+    .price-editor button { padding: 7px 9px; }
+    .status { color: var(--green); }
+    .status.out { color: var(--red); }
+    .stock-actions { display: flex; align-items: center; gap: 8px; }
+    .stock-actions button { min-width: 36px; padding: 7px; }
+    .stock-count { min-width: 24px; text-align: center; }
+    .empty { padding: 28px; color: var(--muted); text-align: center; }
+    .remove {
+      padding: 7px 9px;
+      background: #3a2528;
+      color: #ffb5ba;
+    }
+
+    @media (max-width: 700px) {
+      main { margin: 28px auto; }
+      form { grid-template-columns: 1fr 1fr; }
+      form label:first-child { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 420px) {
+      .panel { padding: 16px; }
+      form { grid-template-columns: 1fr; }
+      form label:first-child { grid-column: auto; }
+      form button { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <header>SMOKINGS<span>.</span>PLEASE</header>
+  <main>
+    <h1>Product stock</h1>
+    <p class="muted">Keep track of your flavors, prices, and available stock.</p>
+
+    <section class="panel" aria-labelledby="add-heading">
+      <h2 id="add-heading">Add a flavor</h2>
+      <form id="productForm">
+        <label for="productBrand">Brand
+          <input id="productBrand" name="brand" maxlength="80" placeholder="e.g. Cloud Nine" required>
+        </label>
+        <label for="productName">Flavor
+          <input id="productName" name="name" maxlength="80" placeholder="e.g. Mango" required>
+        </label>
+        <label for="productPrice">Price (₱)
+          <input id="productPrice" name="price" type="number" min="0.01" step="0.01" placeholder="0.00" required>
+        </label>
+        <label for="productQty">Starting stock
+          <input id="productQty" name="stock" type="number" min="0" step="1" value="0" required>
+        </label>
+        <button type="submit">Add flavor</button>
+      </form>
+    </section>
+
+    <section class="panel" aria-labelledby="inventory-heading">
+      <h2 id="inventory-heading">Flavors</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Brand</th>
+              <th>Flavor</th>
+              <th>Price</th>
+              <th>Available stock</th>
+              <th>Status</th>
+              <th>Update stock</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="productTable"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="vape.js" defer></script>
+</body>
+</html>
